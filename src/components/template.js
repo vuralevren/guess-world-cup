@@ -10,8 +10,10 @@ import {
 import { MailIcon, PlusIcon, PlusSmIcon } from "@heroicons/react/solid";
 import { Fragment, useState } from "react";
 import Logo from "../components/logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/button";
+import { useDispatch } from "react-redux";
+import { authActions } from "../redux/auth/authSlice";
 
 const navigation = [
   { name: "Premier Lig", href: "#", icon: GlobeAltIcon, current: true },
@@ -27,6 +29,8 @@ function classNames(...classes) {
 }
 
 export default function Sidebar({ children }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
@@ -213,6 +217,13 @@ export default function Sidebar({ children }) {
                           {({ active }) => (
                             <a
                               href={item.href}
+                              onClick={() =>
+                                dispatch(
+                                  authActions.signOutRequest({
+                                    onSuccess: () => navigate("/sign-in"),
+                                  })
+                                )
+                              }
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"

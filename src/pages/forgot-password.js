@@ -1,11 +1,57 @@
+import { Link, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import _ from "lodash";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { KeyIcon } from "@heroicons/react/solid";
-import { Link } from "react-router-dom";
 import AuthSidebar from "../components/auth-sidebar";
+import { authActions } from "../redux/auth/authSlice";
 import Button from "../components/button";
 import Input from "../components/inputs/input";
 
 export default function ForgotPassword() {
+  const schema = new yup.ObjectSchema({
+    email: yup.string().email().required("Email is required"),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = ({ email }) => {
+    setIsLoading(true);
+    dispatch(
+      authActions.forgotPasswordRequest({
+        email,
+        onSuccess: () => {
+          navigate(`/forgot-password-email?email=${email}`);
+          setIsLoading(false);
+        },
+        onFailure: (errorList) => {
+          _.forEach(errorList.items, (err) => {
+            setError("email", {
+              type: "manuel",
+              message: err?.message,
+            });
+          });
+          setIsLoading(false);
+        },
+      })
+    );
+  };
+
   return (
     <div className="relative h-screen">
       <div className="grid xl:grid-cols-2 h-full">
@@ -25,23 +71,20 @@ export default function ForgotPassword() {
 
             <div className="mt-8">
               <div className="mt-6">
-                <form
-                  // onSubmit={handleSubmit(formSubmit)}
-                  className="space-y-6"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <Input
                     label="Email"
                     id="email"
                     name="email"
                     placeholder="johndoe@example.com"
-                    // register={register("email")}
-                    // error={errors.email}
+                    register={register("email")}
+                    error={errors.email}
                   />
                   <div>
                     <Button
                       type="submit"
                       className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                      // loading={isLoading}
+                      loading={isLoading}
                     >
                       Reset password
                     </Button>

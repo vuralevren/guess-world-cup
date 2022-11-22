@@ -1,10 +1,79 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import _ from "lodash";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 import Logo from "../components/logo";
 import Button from "../components/button";
 import Input from "../components/inputs/input";
 import AuthSidebar from "../components/auth-sidebar";
+import { authActions } from "../redux/auth/authSlice";
 
 export default function SignIn() {
+  const schema = new yup.ObjectSchema({
+    email: yup.string().email().required("Email is required"),
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(50, "Password must be at most 50 characters")
+      .required("Password is required"),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = ({ email, password }) => {
+    setIsLoading(true);
+    dispatch(
+      authActions.signInRequest({
+        email,
+        password,
+        onSuccess: () => {
+          navigate("/");
+          setIsLoading(false);
+        },
+        onFailure: (errorList) => {
+          _.forEach(errorList.items, (err) => {
+            switch (err?.details?.field) {
+              case "email":
+                setError("email", {
+                  type: "manuel",
+                  message: err?.message,
+                });
+                break;
+              case "password":
+                setError("password", {
+                  type: "manuel",
+                  message: err?.message,
+                });
+                break;
+
+              default:
+                setError("email", {
+                  type: "manuel",
+                  message: err?.message,
+                });
+                break;
+            }
+          });
+          setIsLoading(false);
+        },
+      })
+    );
+  };
+
   return (
     <div className="relative h-screen">
       <div className="grid xl:grid-cols-2 h-full">
@@ -22,16 +91,13 @@ export default function SignIn() {
 
             <div className="mt-8">
               <div className="mt-6">
-                <form
-                  // onSubmit={handleSubmit(formSubmit)}
-                  className="space-y-6"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <Input
                     label="Email"
                     id="email"
                     name="email"
-                    // register={register("email")}
-                    // error={errors.email}
+                    register={register("email")}
+                    error={errors.email}
                     placeholder="johndoe@example.com"
                   />
 
@@ -41,8 +107,8 @@ export default function SignIn() {
                       id="password"
                       name="password"
                       type="password"
-                      //   register={register("password")}
-                      //   error={errors.password}
+                      register={register("password")}
+                      error={errors.password}
                     />
                   </div>
 
@@ -61,7 +127,7 @@ export default function SignIn() {
                     <Button
                       type="submit"
                       className="w-full flex mb-4 justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                      // loading={loading}
+                      loading={isLoading}
                     >
                       Sign in
                     </Button>

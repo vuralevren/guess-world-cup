@@ -1,10 +1,28 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
+import _ from "lodash";
 import classNames from "classnames";
 import Logo from "../components/logo";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Avatar from "./avatar";
+import Button from "./button";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../redux/auth/authSlice";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
+
+  const hasLeague = user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
+
+  const logout = () => {
+    dispatch(
+      authActions.signOutRequest({ onSuccess: () => navigate("/sign-in") })
+    );
+  };
+
   return (
     <Disclosure as="nav" className="flex-shrink-0 bg-pink-600">
       {({ open }) => (
@@ -12,10 +30,12 @@ export default function Navbar() {
           <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
             <div className="relative flex items-center justify-between h-16">
               {/* Logo section */}
-              <Link to="/">
+              <Link
+                to={hasLeague ? `/league/${_.first(user?.leagueSlugs)}` : "/"}
+              >
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0">
-                    <Logo className="h-8 w-auto" />
+                    <Logo className="h-12 w-auto" />
                   </div>
                 </div>
               </Link>
@@ -25,57 +45,65 @@ export default function Navbar() {
               <div className="hidden lg:block lg:w-80">
                 <div className="flex items-center justify-end">
                   {/* Profile dropdown */}
-
-                  <Menu as="div" className="ml-4 relative flex-shrink-0">
-                    <div>
+                  {user ? (
+                    <Menu as="div" className="ml-4 relative flex-shrink-0">
                       <Menu.Button className="bg-pink-700 flex text-sm rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-pink-700 focus:ring-white">
                         <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&h=256&q=80"
-                          alt=""
-                        />
+                        <Avatar size={10} />
                       </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Settings
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Logout
-                            </a>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to="/settings"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Settings
+                              </Link>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <div
+                                onClick={logout}
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                                )}
+                              >
+                                Logout
+                              </div>
+                            )}
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  ) : (
+                    <>
+                      <Link to="/sign-in">
+                        <Button className="block w-full py-1 px-2 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto mr-2">
+                          Login
+                        </Button>
+                      </Link>
+                      <Link to="/create-an-account">
+                        <Button className="block w-full py-1 px-2 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto">
+                          Register
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

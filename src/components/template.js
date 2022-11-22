@@ -112,7 +112,7 @@ export default function Sidebar({ children }) {
                   </nav>
                 </div>
                 <div className="border-t border-pink-800 p-4">
-                  <Link to="/new-league">
+                  <Link to="/">
                     <Button className="w-full bg-pink-500 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-pink-600">
                       New League
                     </Button>
@@ -156,7 +156,7 @@ export default function Sidebar({ children }) {
               </nav>
             </div>
             <div className="border-t border-pink-800 p-4">
-              <Link to="/new-league">
+              <Link to="/">
                 <Button className="w-full bg-pink-500 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-pink-600">
                   New League
                 </Button>

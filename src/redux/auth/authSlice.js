@@ -40,6 +40,20 @@ export const authSlice = createSlice({
       state.user = null;
     },
     signOutFailure() {},
+
+    updateUserFieldsRequest() {},
+    updateUserFieldsSuccess(state, action) {
+      state.user = action.payload.user;
+    },
+    updateUserFieldsFailure() {},
+
+    uploadProfilePictureRequest() {},
+    uploadProfilePictureSuccess(state, action) {
+      state.user = action.payload.user;
+    },
+    uploadProfilePictureFailure() {},
+
+    deleteProfilePictureRequest() {},
   },
 });
 

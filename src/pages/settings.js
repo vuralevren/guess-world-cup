@@ -12,6 +12,7 @@ import SettingsProfile from "./settings-profile";
 import useQuery from "../helpers/useQuery";
 import SettingsLeague from "./settings-league";
 import Navbar from "../components/navbar";
+import classNames from "classnames";
 
 const navigation = [
   { name: "Account", href: "/settings", icon: UserCircleIcon, current: true },
@@ -22,10 +23,6 @@ const navigation = [
     current: false,
   },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Settings(props) {
   const tab = useQuery("tab");

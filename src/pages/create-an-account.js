@@ -3,13 +3,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import _ from "lodash";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 import Button from "../components/button";
 import Input from "../components/inputs/input";
 import Logo from "../components/logo";
 import AuthSidebar from "../components/auth-sidebar";
 import { authActions } from "../redux/auth/authSlice";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
 
 export default function CreateAnAccount() {
   const schema = new yup.ObjectSchema({
@@ -66,6 +66,7 @@ export default function CreateAnAccount() {
       authActions.registerRequest({
         userReq: data,
         onSuccess: () => {
+          console.log("deneme");
           navigate(`/forgot-password-email?email=${data.email}`);
           setIsLoading(false);
         },

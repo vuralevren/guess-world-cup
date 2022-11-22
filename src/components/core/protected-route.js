@@ -1,17 +1,19 @@
 import { useEffect } from "react";
+import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 export function Private({ children, mustHasLeague }) {
   const navigate = useNavigate();
+
   const user = useSelector((state) => state.auth.user);
+  const hasLeague = user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
 
   useEffect(() => {
     if (user === null) {
-      // Navigate to sign in, if the user has not session
-      navigate("/sign-in");
-    } else if (mustHasLeague && !user.hasLeague) {
-      navigate("/new-league");
+      navigate("/");
+    } else if (mustHasLeague && !hasLeague) {
+      navigate("/");
     }
   }, [user]);
 
@@ -20,12 +22,14 @@ export function Private({ children, mustHasLeague }) {
 
 export function Public({ children }) {
   const navigate = useNavigate();
+
   const user = useSelector((state) => state.auth.user);
+  const hasLeague = user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
 
   useEffect(() => {
+    console.log(user);
     if (user) {
-      // Navigate to sign in, if the user has not session
-      navigate("/");
+      navigate(hasLeague ? `/league/${_.first(user?.leagueSlugs)}` : "/");
     }
   }, [user]);
 

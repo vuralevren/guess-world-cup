@@ -12,8 +12,16 @@ import ForgotPasswordEmail from "./pages/forgot-password-email";
 import AuthRedirect from "./pages/auth-redirect";
 
 import * as ProtectedRoute from "./components/core/protected-route";
+import Navbar from "./components/navbar";
+import NotFound from "./pages/not-found";
+import { ToastContainer, toast, cssTransition } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const store = makeStore();
+const toastTransition = cssTransition({
+  enter: "animate__animated animate__slideInDown",
+  exit: "animate__animated animate__slideOutUp",
+});
 
 export default function App() {
   return (
@@ -22,7 +30,7 @@ export default function App() {
         <Routes>
           {/* Private Routes */}
           <Route
-            path="/"
+            path="/league/:leagueSlug"
             element={
               <ProtectedRoute.Private mustHasLeague>
                 <Home />
@@ -70,10 +78,24 @@ export default function App() {
               </ProtectedRoute.Public>
             }
           />
-          <Route path="/new-league" element={<NewLeague />} />
+          <Route path="/" element={<NewLeague />} />
           <Route path="/auth-redirect" element={<AuthRedirect />} />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
+      <ToastContainer
+        position="top-center"
+        autoClose={700}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </Provider>
   );
 }

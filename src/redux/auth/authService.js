@@ -4,8 +4,8 @@ const authService = {
   register(user) {
     return auth.signUpWithEmail(user.email, user.password, user);
   },
-  checkUserName(userName) {
-    return endpoint.post("/user/userName", { userName });
+  checkUserName(userName, userId) {
+    return endpoint.post("/user/userName", { userName, userId });
   },
   signIn(email, password) {
     return auth.signInWithEmail(email, password);
@@ -18,6 +18,15 @@ const authService = {
   },
   signOut() {
     return auth.signOut();
+  },
+  getUserFromDB() {
+    return auth.getUserFromDB();
+  },
+  setUser(user) {
+    auth.setUser(user);
+  },
+  updateUserFields(userId, fields) {
+    return db.model("users").object(userId).update(fields);
   },
 };
 

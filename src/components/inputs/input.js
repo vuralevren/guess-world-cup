@@ -42,13 +42,13 @@ function Input({
           )}
           <input
             id={id}
-            autoComplete="off"
             className={`appearance-none block w-full h-full px-3 py-3 text-slate-500 border border-gray-300 shadow-sm placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 ${
               error &&
               "border-red-600 text-red-900 placeholder-red-300 focus:ring-red-600"
             } ${!prefix ? "rounded-md" : ""} ${className}`}
             {...register}
             {...rest}
+            autoComplete="off"
           />
         </div>
         {error && (

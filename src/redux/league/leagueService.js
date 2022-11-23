@@ -1,11 +1,10 @@
 import { auth, db, endpoint } from "../../configs/altogic";
 
 const leagueService = {
-  create({ teamName, leagueName, leaguePassword, userName }) {
+  create({ teamName, leagueName, userName }) {
     return endpoint.put("league", {
       teamName,
       leagueName,
-      leaguePassword,
       userName,
     });
   },

@@ -14,20 +14,12 @@ import { setUserFieldsSaga } from "../auth/authSaga";
 import { useSelector } from "react-redux";
 
 function* createSaga({
-  payload: {
-    teamName,
-    leagueName,
-    leaguePassword,
-    userName,
-    onSuccess,
-    onFailure,
-  },
+  payload: { teamName, leagueName, userName, onSuccess, onFailure },
 }) {
   try {
     const { data: league, errors } = yield call(leagueService.create, {
       teamName,
       leagueName,
-      leaguePassword,
       userName,
     });
     if (errors) {

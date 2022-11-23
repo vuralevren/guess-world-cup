@@ -20,15 +20,10 @@ export default function CreateLeagueForm() {
       .max(15, "Team Name must be at most 15 characters."),
     leagueName: yup
       .string()
-      .required("League Name is required ")
+      .required("League Name is required.")
       .trim()
       .min(3, "League Name must be at least 3 characters.")
       .max(15, "League Name must be at most 15 characters."),
-    leaguePassword: yup
-      .string()
-      .min(8, "Password must be at least 8 characters.")
-      .max(50, "Password must be at most 50 characters.")
-      .required("Password is required."),
   });
 
   const {
@@ -104,14 +99,6 @@ export default function CreateLeagueForm() {
         onBlur={checkLeagueName}
         register={register("leagueName")}
         error={errors.leagueName}
-      />
-      <Input
-        label="League Password"
-        id="leaguePassword"
-        name="leaguePassword"
-        type="password"
-        register={register("leaguePassword")}
-        error={errors.leaguePassword}
       />
       <Button
         type={formAvailable ? "submit" : "button"}

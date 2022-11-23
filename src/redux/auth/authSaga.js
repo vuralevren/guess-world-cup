@@ -21,10 +21,8 @@ function* registerSaga({ payload: { userReq, onSuccess, onFailure } }) {
     }
 
     if (_.isFunction(onSuccess)) onSuccess();
-    yield put(authActions.registerSuccess());
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
-    yield put(authActions.registerFailure(e));
   }
 }
 
@@ -42,9 +40,7 @@ function* checkUserNameSaga({
     }
 
     if (_.isFunction(onSuccess)) onSuccess(data.isAvailable);
-    yield put(authActions.checkUserNameSuccess());
   } catch (e) {
-    yield put(authActions.checkUserNameFailure(e));
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -57,10 +53,9 @@ function* signInSaga({ payload: { email, password, onSuccess, onFailure } }) {
     }
 
     if (_.isFunction(onSuccess)) onSuccess();
-    yield put(authActions.signInSuccess({ user }));
+    yield put(authActions.setUser(user));
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
-    yield put(authActions.registerFailure(e));
   }
 }
 
@@ -72,10 +67,8 @@ function* forgotPasswordSaga({ payload: { email, onSuccess, onFailure } }) {
     }
 
     if (_.isFunction(onSuccess)) onSuccess();
-    yield put(authActions.forgotPasswordSuccess());
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
-    yield put(authActions.forgotPasswordFailure(e));
   }
 }
 
@@ -92,10 +85,9 @@ function* signInWithTokenSaga({
     }
 
     if (_.isFunction(onSuccess)) onSuccess(user);
-    yield put(authActions.signInWithTokenSuccess({ user }));
+    yield put(authActions.setUser(user));
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
-    yield put(authActions.signInWithTokenFailure(e));
   }
 }
 
@@ -107,10 +99,9 @@ function* signOutSaga({ payload: { onSuccess, onFailure } }) {
     }
 
     if (_.isFunction(onSuccess)) onSuccess();
-    yield put(authActions.signOutSuccess());
+    yield put(authActions.setUser(null));
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
-    yield put(authActions.signOutFailure(e));
   }
 }
 
@@ -127,10 +118,8 @@ function* getUserFromDBSaga() {
       }
 
       authService.setUser(fetchedUser);
-      yield put(authActions.signInSuccess({ user: fetchedUser }));
-    } catch (e) {
-      yield put(authActions.signInFailure(e));
-    }
+      yield put(authActions.setUser(fetchedUser));
+    } catch (e) {}
   }
 }
 
@@ -149,9 +138,8 @@ function* updateUserFieldsSaga({
 
     if (_.isFunction(onSuccess)) onSuccess();
     authService.setUser(updatedUser);
-    yield put(authActions.updateUserFieldsSuccess({ user: updatedUser }));
+    yield put(authActions.setUser(updatedUser));
   } catch (e) {
-    yield put(authActions.updateUserFieldsFailure(e));
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -179,9 +167,8 @@ function* uploadProfilePictureSaga({
 
     if (_.isFunction(onSuccess)) onSuccess();
     authService.setUser(updatedUser);
-    yield put(authActions.updateUserFieldsSuccess({ user: updatedUser }));
+    yield put(authActions.setUser(updatedUser));
   } catch (e) {
-    yield put(authActions.updateUserFieldsFailure(e));
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -208,9 +195,57 @@ function* deleteProfilePictureSaga({
 
     if (_.isFunction(onSuccess)) onSuccess();
     authService.setUser(updatedUser);
-    yield put(authActions.updateUserFieldsSuccess({ user: updatedUser }));
+    yield put(authActions.setUser(updatedUser));
   } catch (e) {
-    yield put(authActions.updateUserFieldsFailure(e));
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* changeEmailSaga({
+  payload: { newEmail, password, onSuccess, onFailure },
+}) {
+  try {
+    const { errors } = yield call(authService.changeEmail, newEmail, password);
+    if (errors) {
+      throw errors;
+    }
+
+    if (_.isFunction(onSuccess)) onSuccess();
+  } catch (e) {
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* resendVerificationEmailSaga({
+  payload: { email, onSuccess, onFailure },
+}) {
+  try {
+    const { errors } = yield call(authService.resendVerificationEmail, email);
+    if (errors) {
+      throw errors;
+    }
+
+    if (_.isFunction(onSuccess)) onSuccess();
+  } catch (e) {
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* changePasswordSaga({
+  payload: { currentPassword, newPassword, onSuccess, onFailure },
+}) {
+  try {
+    const { errors } = yield call(
+      authService.changePassword,
+      currentPassword,
+      newPassword
+    );
+    if (errors) {
+      throw errors;
+    }
+
+    if (_.isFunction(onSuccess)) onSuccess();
+  } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -233,5 +268,11 @@ export default function* rootSaga() {
       authActions.deleteProfilePictureRequest.type,
       deleteProfilePictureSaga
     ),
+    takeLatest(authActions.changeEmailRequest.type, changeEmailSaga),
+    takeLatest(
+      authActions.resendVerificationEmailRequest.type,
+      resendVerificationEmailSaga
+    ),
+    takeLatest(authActions.changePasswordRequest.type, changePasswordSaga),
   ]);
 }

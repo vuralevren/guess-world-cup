@@ -10,50 +10,21 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     registerRequest() {},
-    registerSuccess(state, action) {
-      state.user = action.payload.user;
-    },
-    registerFailure() {},
-
     checkUserNameRequest() {},
-    checkUserNameSuccess() {},
-    checkUserNameFailure() {},
-
     signInRequest() {},
-    signInSuccess(state, action) {
-      state.user = action.payload.user;
-    },
-    signInFailure() {},
-
     forgotPasswordRequest() {},
-    forgotPasswordSuccess() {},
-    forgotPasswordFailure() {},
-
     signInWithTokenRequest() {},
-    signInWithTokenSuccess(state, action) {
-      state.user = action.payload.user;
-    },
-    signInWithTokenFailure() {},
-
     signOutRequest() {},
-    signOutSuccess(state) {
-      state.user = null;
-    },
-    signOutFailure() {},
-
     updateUserFieldsRequest() {},
-    updateUserFieldsSuccess(state, action) {
-      state.user = action.payload.user;
-    },
-    updateUserFieldsFailure() {},
-
     uploadProfilePictureRequest() {},
-    uploadProfilePictureSuccess(state, action) {
-      state.user = action.payload.user;
-    },
-    uploadProfilePictureFailure() {},
-
     deleteProfilePictureRequest() {},
+    changeEmailRequest() {},
+    resendVerificationEmailRequest() {},
+    changePasswordRequest() {},
+
+    setUser(state, action) {
+      state.user = action.payload;
+    },
   },
 });
 

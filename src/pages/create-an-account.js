@@ -66,8 +66,7 @@ export default function CreateAnAccount() {
       authActions.registerRequest({
         userReq: data,
         onSuccess: () => {
-          console.log("deneme");
-          navigate(`/forgot-password-email?email=${data.email}`);
+          navigate(`/email-verification/${data.email}`);
           setIsLoading(false);
         },
         onFailure: (errorList) => {

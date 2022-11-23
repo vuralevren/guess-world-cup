@@ -28,6 +28,15 @@ const authService = {
   updateUserFields(userId, fields) {
     return db.model("users").object(userId).update(fields);
   },
+  changeEmail(newEmail, password) {
+    return auth.changeEmail(password, newEmail);
+  },
+  resendVerificationEmail(email) {
+    return auth.resendVerificationEmail(email);
+  },
+  changePassword(currentPassword, newPassword) {
+    return auth.changePassword(newPassword, currentPassword);
+  },
 };
 
 export default authService;

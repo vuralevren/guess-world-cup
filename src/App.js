@@ -16,12 +16,9 @@ import Navbar from "./components/navbar";
 import NotFound from "./pages/not-found";
 import { ToastContainer, toast, cssTransition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EmailVerification from "./pages/email-verification";
 
 const store = makeStore();
-const toastTransition = cssTransition({
-  enter: "animate__animated animate__slideInDown",
-  exit: "animate__animated animate__slideOutUp",
-});
 
 export default function App() {
   return (
@@ -80,6 +77,10 @@ export default function App() {
           />
           <Route path="/" element={<NewLeague />} />
           <Route path="/auth-redirect" element={<AuthRedirect />} />
+          <Route
+            path="/email-verification/:email"
+            element={<EmailVerification />}
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -10,10 +10,15 @@ import {
 import { MailIcon, PlusIcon, PlusSmIcon } from "@heroicons/react/solid";
 import { Fragment, useState } from "react";
 import Logo from "../components/logo";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Button from "../components/button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../redux/auth/authSlice";
+import _ from "lodash";
+import cs from "classnames";
+import functions from "../helpers/functions";
+import Avatar from "./avatar";
+import { toast } from "react-toastify";
 
 const navigation = [
   { name: "Premier Lig", href: "#", icon: GlobeAltIcon, current: true },
@@ -24,14 +29,45 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Sidebar({ children }) {
-  const dispatch = useDispatch();
+  const { leagueSlug } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const user = useSelector((state) => state.auth.user);
+  const league = useSelector((state) => state.league.league);
+
+  const copyCode = () => {
+    toast.success("Invation code copied to clipboard");
+    navigator.clipboard.writeText(league?.code);
+  };
+
+  const getNavigations = () => {
+    return (
+      <>
+        {_.map(user?.leagueSlugs, (slug) => (
+          <Link
+            key={slug}
+            to={`/league/${slug}`}
+            className={cs(
+              //item.current
+              leagueSlug === slug
+                ? "bg-pink-800 text-white"
+                : "text-pink-100 hover:bg-pink-600",
+              "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+            )}
+          >
+            <GlobeAltIcon
+              className="mr-3 flex-shrink-0 h-6 w-6 text-pink-300"
+              aria-hidden="true"
+            />
+            {functions.convertToTitle(slug)}
+          </Link>
+        ))}
+      </>
+    );
+  };
 
   return (
     <>
@@ -90,26 +126,7 @@ export default function Sidebar({ children }) {
                   <Logo />
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                  <nav className="px-2 space-y-1">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "bg-pink-800 text-white"
-                            : "text-pink-100 hover:bg-pink-600",
-                          "group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                        )}
-                      >
-                        <item.icon
-                          className="mr-4 flex-shrink-0 h-6 w-6 text-pink-300"
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ))}
-                  </nav>
+                  <nav className="px-2 space-y-1">{getNavigations()}</nav>
                 </div>
                 <div className="border-t border-pink-800 p-4">
                   <Link to="/">
@@ -135,24 +152,7 @@ export default function Sidebar({ children }) {
             </div>
             <div className="mt-5 flex-1 flex flex-col">
               <nav className="flex-1 px-2 pb-4 space-y-1">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-pink-800 text-white"
-                        : "text-pink-100 hover:bg-pink-600",
-                      "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                    )}
-                  >
-                    <item.icon
-                      className="mr-3 flex-shrink-0 h-6 w-6 text-pink-300"
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </a>
-                ))}
+                {getNavigations()}
               </nav>
             </div>
             <div className="border-t border-pink-800 p-4">
@@ -179,6 +179,7 @@ export default function Sidebar({ children }) {
                 <button
                   type="button"
                   className="w-10 h-10 rounded-full inline-flex items-center justify-center text-gray-400 hover:text-gray-500"
+                  onClick={copyCode}
                 >
                   <span className="sr-only">Insert link</span>
                   <LinkIcon className="h-5 w-5" aria-hidden="true" />
@@ -195,11 +196,12 @@ export default function Sidebar({ children }) {
                   <div>
                     <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                       <span className="sr-only">Open user menu</span>
-                      <img
+                      <Avatar size={10} />
+                      {/* <img
                         className="h-8 w-8 rounded-full"
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                         alt=""
-                      />
+                      /> */}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -212,28 +214,38 @@ export default function Sidebar({ children }) {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              onClick={() =>
-                                dispatch(
-                                  authActions.signOutRequest({
-                                    onSuccess: () => navigate("/sign-in"),
-                                  })
-                                )
-                              }
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      <Menu.Item>
+                        {({ active }) => (
+                          <Link
+                            to="/settings"
+                            className={cs(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            Settings
+                          </Link>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <label
+                            onClick={() =>
+                              dispatch(
+                                authActions.signOutRequest({
+                                  onSuccess: () => navigate("/sign-in"),
+                                })
+                              )
+                            }
+                            className={cs(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            Sign Out
+                          </label>
+                        )}
+                      </Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>

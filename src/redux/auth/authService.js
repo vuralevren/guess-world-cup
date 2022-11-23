@@ -37,6 +37,9 @@ const authService = {
   changePassword(currentPassword, newPassword) {
     return auth.changePassword(newPassword, currentPassword);
   },
+  setUserFields(userId, fields) {
+    return db.model("users").object(userId).updateFields(fields);
+  },
 };
 
 export default authService;

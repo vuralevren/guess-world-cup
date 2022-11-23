@@ -7,17 +7,11 @@ import RadioButtons from "../inputs/radio-buttons";
 import Button from "../button";
 import Input from "../inputs/input";
 import InputPhoto from "../inputs/input-photo";
+import CreateLeagueForm from "../forms/create-league-form";
 
-export default function CreateLeagueModal({
-  open,
-  setOpen,
-  homeTeam,
-  homeLogo,
-  awayTeam,
-  awayLogo,
-}) {
+export default function CreateLeagueModal({ open, setOpen }) {
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={open !== false} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
@@ -53,19 +47,7 @@ export default function CreateLeagueModal({
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-              <Input label="Team Name" />
-              <Input label="League Name" />
-              <InputPhoto label="Logo" />
-              <Input label="League Password" />
-              <div className="mt-5 sm:mt-6">
-                <Button
-                  type="button"
-                  className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 sm:text-sm"
-                  onClick={() => setOpen(false)}
-                >
-                  Join
-                </Button>
-              </div>
+              <CreateLeagueForm />
             </div>
           </Transition.Child>
         </div>

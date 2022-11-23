@@ -19,8 +19,9 @@ const fontSize = (size) => {
   }
 };
 
-export default function Avatar({ size }) {
-  const user = useSelector((state) => state.auth.user);
+export default function Avatar({ size, anotherUser }) {
+  const currentUser = useSelector((state) => state.auth.user);
+  const user = anotherUser || currentUser;
 
   return user.profilePicture ? (
     <img

@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/button";
-import CreateLeagueModal from "../components/modals/create-league-modal";
-import JoinLeagueModal from "../components/modals/join-league-modal";
+import LeagueFormModal from "../components/modals/league-form-modal";
 import Logo from "../components/logo";
 import Navbar from "../components/navbar";
 import { useSelector } from "react-redux";
 
 export default function NewLeague() {
-  const [openJoin, setJoinOpen] = useState(false);
-  const [openCreate, setCreateOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const user = useSelector((state) => state.auth.user);
 
@@ -122,13 +120,13 @@ export default function NewLeague() {
                     <>
                       <Button
                         className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto"
-                        onClick={() => setCreateOpen(true)}
+                        onClick={() => setOpen("create")}
                       >
                         Create League
                       </Button>
                       <Button
                         className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto ml-3"
-                        onClick={() => setJoinOpen(true)}
+                        onClick={() => setOpen("join")}
                       >
                         Join League
                       </Button>
@@ -153,8 +151,7 @@ export default function NewLeague() {
               </div>
             </div>
           </div>
-          <CreateLeagueModal open={openCreate} setOpen={setCreateOpen} />
-          <JoinLeagueModal open={openJoin} setOpen={setJoinOpen} />
+          <LeagueFormModal open={open} setOpen={setOpen} />
         </div>
       </div>
     </>

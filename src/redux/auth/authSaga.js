@@ -250,6 +250,25 @@ function* changePasswordSaga({
   }
 }
 
+export function* setUserFieldsSaga({ userId, fields }) {
+  try {
+    const { data, errors } = yield call(
+      authService.setUserFields,
+      userId,
+      fields
+    );
+    if (errors) {
+      throw errors;
+    }
+
+    authService.setUser(data);
+    yield put(authActions.setUser(data));
+    return { errors: null };
+  } catch (e) {
+    return { errors: e };
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     fork(getUserFromDBSaga),

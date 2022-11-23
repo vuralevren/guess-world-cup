@@ -1,4 +1,7 @@
+import _ from "lodash";
+import { useSelector } from "react-redux";
 import Container from "./container";
+import Avatar from "./avatar";
 
 const teams = [
   {
@@ -32,10 +35,15 @@ const teams = [
   // More projects...
 ];
 
-export default function LeagueTable(params) {
+export default function LeagueTable() {
+  const league = useSelector((state) => state.league.league);
+  const teams = _.orderBy(league?.teams, ["point"], ["desc"]);
+
   return (
     <Container>
-      <h1 className="text-2xl font-semibold text-gray-900">League Table</h1>
+      <h1 className="text-2xl font-semibold text-gray-900">
+        {league?.name} Table
+      </h1>
       <div className="mt-6">
         <table className="min-w-full">
           <thead>
@@ -49,25 +57,21 @@ export default function LeagueTable(params) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
-            {teams.map((team, index) => (
-              <tr className="group group-hover:bg-gray-50" key={index}>
+            {_.map(teams, (team, index) => (
+              <tr className="group group-hover:bg-gray-50" key={team.name}>
                 <td className="relative px-6 py-5 flex items-center space-x-3 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
                   <div className="flex items-center space-x-2">{index + 1}</div>
                   <div className="flex-shrink-0">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={team.profilePicture}
-                      alt=""
-                    />
+                    <Avatar anotherUser={team.user} size={10} />
                   </div>
                   <div className="flex-1 min-w-0">
                     {/* Extend touch target to entire panel */}
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">
-                      {team.team}
+                      {team.name}
                     </p>
                     <p className="text-sm text-gray-500 truncate">
-                      {team.name}
+                      {team.user.userName}
                     </p>
                   </div>
                 </td>

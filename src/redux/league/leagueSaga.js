@@ -10,14 +10,17 @@ import {
 } from "redux-saga/effects";
 import { leagueActions } from "./leagueSlice";
 import _ from "lodash";
-import { setUserFieldsSaga } from "../auth/authSaga";
+import { setUserFieldsSaga, setUserLocalSaga } from "../auth/authSaga";
 import { useSelector } from "react-redux";
 
 function* createSaga({
   payload: { teamName, leagueName, userName, onSuccess, onFailure },
 }) {
   try {
-    const { data: league, errors } = yield call(leagueService.create, {
+    const {
+      data: { league, userLeague },
+      errors,
+    } = yield call(leagueService.create, {
       teamName,
       leagueName,
       userName,
@@ -26,20 +29,14 @@ function* createSaga({
       throw errors;
     }
 
-    const userId = yield select((state) => state.auth.user._id);
-    const { errors: userError } = yield call(setUserFieldsSaga, {
-      userId,
-      fields: {
-        field: "leagueSlugs",
-        updateType: "push",
-        value: league.slug,
-      },
+    const user = yield select((state) => state.auth.user);
+    yield fork(setUserLocalSaga, {
+      ...user,
+      leagues: user.leagues ? [...user.leagues, userLeague] : [userLeague],
     });
-    if (userError) {
-      throw userError;
-    }
 
     if (_.isFunction(onSuccess)) onSuccess(league.slug);
+    yield put(leagueActions.setLeague(league));
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
   }
@@ -90,7 +87,7 @@ function* getLeagueBySlugSaga({
       throw leagueErrors;
     }
 
-    if (_.isFunction(onSuccess)) onSuccess();
+    if (_.isFunction(onSuccess)) onSuccess(_.first(league));
     yield put(
       leagueActions.setLeague({
         ..._.first(league),
@@ -98,6 +95,125 @@ function* getLeagueBySlugSaga({
       })
     );
   } catch (e) {
+    console.log(e);
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* checkleagueCodeSaga({
+  payload: { leagueCode, onSuccess, onFailure },
+}) {
+  try {
+    const { data, errors } = yield call(
+      leagueService.checkLeagueCode,
+      leagueCode
+    );
+    if (errors) {
+      throw errors;
+    }
+    if (_.isFunction(onSuccess))
+      onSuccess({
+        isAvailable: data?.available?.isAvailable || data?.isAvailable,
+        league: data?.league,
+      });
+  } catch (e) {
+    console.log(e);
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* joinSaga({
+  payload: { teamName, leagueId, leagueSlug, onSuccess, onFailure },
+}) {
+  try {
+    const { data: userLeague, errors } = yield call(leagueService.join, {
+      teamName,
+      leagueId,
+      leagueSlug,
+    });
+    if (errors) {
+      throw errors;
+    }
+
+    const user = yield select((state) => state.auth.user);
+    yield fork(setUserLocalSaga, {
+      ...user,
+      leagues: user.leagues ? [...user.leagues, userLeague] : [userLeague],
+    });
+
+    if (_.isFunction(onSuccess)) onSuccess(userLeague.slug);
+  } catch (e) {
+    console.log(e);
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* changeLeagueNameSaga({
+  payload: { leagueId, leagueName, onSuccess, onFailure },
+}) {
+  try {
+    const { data: updatedLeague, errors } = yield call(
+      leagueService.changeLeagueName,
+      leagueId,
+      leagueName
+    );
+    if (errors) {
+      throw errors;
+    }
+
+    const teams = yield select((state) => state.league.league.teams);
+    const user = yield select((state) => state.auth.user);
+    const newUserLeagues = _.map(user.leagues, (league) =>
+      league.league === leagueId
+        ? {
+            ...league,
+            slug: updatedLeague?.slug,
+          }
+        : league
+    );
+
+    yield put(
+      leagueActions.setLeague({
+        ...updatedLeague,
+        teams,
+      })
+    );
+    yield fork(setUserLocalSaga, {
+      ...user,
+      leagues: newUserLeagues,
+    });
+
+    if (_.isFunction(onSuccess)) onSuccess(updatedLeague?.slug);
+  } catch (e) {
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
+function* deleteTeamSaga({
+  payload: { leagueId, teamId, userId, onSuccess, onFailure },
+}) {
+  try {
+    const { errors } = yield call(
+      leagueService.deleteTeam,
+      leagueId,
+      teamId,
+      userId
+    );
+    if (errors) {
+      throw errors;
+    }
+
+    const league = yield select((state) => state.league.league);
+
+    yield put(
+      leagueActions.setLeague({
+        ...league,
+        teams: _.reject(league.teams, (team) => team._id === teamId),
+      })
+    );
+    if (_.isFunction(onSuccess)) onSuccess();
+  } catch (e) {
+    console.log(e);
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -107,5 +223,12 @@ export default function* rootSaga() {
     takeLatest(leagueActions.createRequest.type, createSaga),
     takeLatest(leagueActions.checkLeagueNameRequest.type, checkLeagueNameSaga),
     takeLatest(leagueActions.getLeagueBySlugRequest.type, getLeagueBySlugSaga),
+    takeLatest(leagueActions.checkleagueCodeRequest.type, checkleagueCodeSaga),
+    takeLatest(leagueActions.joinRequest.type, joinSaga),
+    takeLatest(
+      leagueActions.changeLeagueNameRequest.type,
+      changeLeagueNameSaga
+    ),
+    takeLatest(leagueActions.deleteTeamRequest.type, deleteTeamSaga),
   ]);
 }

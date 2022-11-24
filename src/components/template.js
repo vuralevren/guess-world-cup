@@ -20,15 +20,6 @@ import functions from "../helpers/functions";
 import Avatar from "./avatar";
 import { toast } from "react-toastify";
 
-const navigation = [
-  { name: "Premier Lig", href: "#", icon: GlobeAltIcon, current: true },
-  { name: "Koruma Gonca Lig", href: "#", icon: GlobeAltIcon, current: false },
-];
-const userNavigation = [
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
 export default function Sidebar({ children }) {
   const { leagueSlug } = useParams();
   const navigate = useNavigate();
@@ -46,7 +37,7 @@ export default function Sidebar({ children }) {
   const getNavigations = () => {
     return (
       <>
-        {_.map(user?.leagueSlugs, (slug) => (
+        {_.map(user?.leagues, ({ slug }) => (
           <Link
             key={slug}
             to={`/league/${slug}`}
@@ -184,13 +175,15 @@ export default function Sidebar({ children }) {
                   <span className="sr-only">Insert link</span>
                   <LinkIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
-                <Link
-                  className="-m-2.5 w-10 h-10 rounded-full inline-flex items-center justify-center text-gray-400 hover:text-gray-500"
-                  to="/settings?tab=selectedLeague"
-                >
-                  <span className="sr-only">Settings</span>
-                  <CogIcon className="h-5 w-5" aria-hidden="true" />
-                </Link>
+                {league?.owner === user?._id && (
+                  <Link
+                    className="-m-2.5 w-10 h-10 rounded-full inline-flex items-center justify-center text-gray-400 hover:text-gray-500"
+                    to={`/settings/?tab=${league?.slug}`}
+                  >
+                    <span className="sr-only">Settings</span>
+                    <CogIcon className="h-5 w-5" aria-hidden="true" />
+                  </Link>
+                )}
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-3 relative">
                   <div>

@@ -7,7 +7,7 @@ export function Private({ children, mustHasLeague }) {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.auth.user);
-  const hasLeague = user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
+  const hasLeague = user?.leagues && !_.isEmpty(user?.leagues);
 
   useEffect(() => {
     if (user === null) {
@@ -24,12 +24,12 @@ export function Public({ children }) {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.auth.user);
-  const hasLeague = user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
+  const hasLeague = user?.leagues && !_.isEmpty(user?.leagues);
 
   useEffect(() => {
     console.log(user);
     if (user) {
-      navigate(hasLeague ? `/league/${_.first(user?.leagueSlugs)}` : "/");
+      navigate(hasLeague ? `/league/${_.first(user?.leagues).slug}` : "/");
     }
   }, [user]);
 

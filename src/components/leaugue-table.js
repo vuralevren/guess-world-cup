@@ -2,38 +2,7 @@ import _ from "lodash";
 import { useSelector } from "react-redux";
 import Container from "./container";
 import Avatar from "./avatar";
-
-const teams = [
-  {
-    team: "Galatasaray",
-    name: "Evren",
-    profilePicture:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    point: 23,
-  },
-  {
-    team: "Fenerbahçe",
-    name: "Burak",
-    profilePicture:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    point: 12,
-  },
-  {
-    team: "Beşiktaş",
-    name: "Orçun",
-    profilePicture:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    point: 6,
-  },
-  {
-    team: "Trabzonspor",
-    name: "Furkan",
-    profilePicture:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    point: 4,
-  },
-  // More projects...
-];
+import functions from "../helpers/functions";
 
 export default function LeagueTable() {
   const league = useSelector((state) => state.league.league);
@@ -42,7 +11,7 @@ export default function LeagueTable() {
   return (
     <Container>
       <h1 className="text-2xl font-semibold text-gray-900">
-        {league?.name} Table
+        {functions.convertToTitle(league?.name)} Table
       </h1>
       <div className="mt-6">
         <table className="min-w-full">
@@ -58,7 +27,7 @@ export default function LeagueTable() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
             {_.map(teams, (team, index) => (
-              <tr className="group group-hover:bg-gray-50" key={team.name}>
+              <tr className="group group-hover:bg-gray-50" key={team.user._id}>
                 <td className="relative px-6 py-5 flex items-center space-x-3 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
                   <div className="flex items-center space-x-2">{index + 1}</div>
                   <div className="flex-shrink-0">

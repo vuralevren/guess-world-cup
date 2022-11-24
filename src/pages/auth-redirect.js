@@ -18,16 +18,17 @@ export default function AuthRedirect() {
         accessToken,
         onSuccess: (signedUser) => {
           const hasLeague =
-            signedUser?.leagueSlugs && !_.isEmpty(signedUser?.leagueSlugs);
+            signedUser?.leagues && !_.isEmpty(signedUser?.leagues);
           navigate(
-            hasLeague ? `/league/${_.first(signedUser?.leagueSlugs)}` : "/"
+            hasLeague ? `/league/${_.first(signedUser?.league).slug}` : "/"
           );
         },
         onFailure: () => {
           if (user) {
-            const hasLeague =
-              user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
-            navigate(hasLeague ? `/league/${_.first(user?.leagueSlugs)}` : "/");
+            const hasLeague = user?.leagues && !_.isEmpty(user?.leagues);
+            navigate(
+              hasLeague ? `/league/${_.first(user?.leagues).slug}` : "/"
+            );
           } else {
             navigate("/sign-in");
           }

@@ -11,6 +11,10 @@ export const leagueSlice = createSlice({
     createRequest() {},
     checkLeagueNameRequest() {},
     getLeagueBySlugRequest() {},
+    checkleagueCodeRequest() {},
+    joinRequest() {},
+    changeLeagueNameRequest() {},
+    deleteTeamRequest() {},
 
     setLeague(state, action) {
       state.league = action.payload;

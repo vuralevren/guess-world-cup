@@ -68,7 +68,7 @@ export default function Fixtures(params) {
         {matches.map((match, index) => (
           <div key={index} className="group relative">
             <div className="aspect-w-1 aspect-h-1 bg-gray-200 rounded-md overflow-hidden">
-              <td className="relative px-6 py-5 flex items-center space-x-3 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
+              <div className="relative px-6 py-5 flex items-center space-x-3 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
                 <div className="flex-shrink-0">
                   <img
                     className="h-10 w-10 rounded-full"
@@ -86,8 +86,8 @@ export default function Fixtures(params) {
                 <div className="flex items-center space-x-2">
                   {match.homeScore}
                 </div>
-              </td>
-              <td className="relative px-6 py-5 flex items-center space-x-3  focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
+              </div>
+              <div className="relative px-6 py-5 flex items-center space-x-3  focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
                 <div className="flex-shrink-0">
                   <img
                     className="h-10 w-10 rounded-full"
@@ -105,7 +105,7 @@ export default function Fixtures(params) {
                 <div className="flex items-center space-x-2">
                   {match.awayScore}
                 </div>
-              </td>
+              </div>
               <div className="mt-2">
                 <Button
                   className="w-full bg-pink-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-pink-700"

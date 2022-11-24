@@ -250,23 +250,9 @@ function* changePasswordSaga({
   }
 }
 
-export function* setUserFieldsSaga({ userId, fields }) {
-  try {
-    const { data, errors } = yield call(
-      authService.setUserFields,
-      userId,
-      fields
-    );
-    if (errors) {
-      throw errors;
-    }
-
-    authService.setUser(data);
-    yield put(authActions.setUser(data));
-    return { errors: null };
-  } catch (e) {
-    return { errors: e };
-  }
+export function* setUserLocalSaga(user) {
+  authService.setUser(user);
+  yield put(authActions.setUser(user));
 }
 
 export default function* rootSaga() {

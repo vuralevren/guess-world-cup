@@ -15,7 +15,7 @@ export default function Navbar() {
 
   const user = useSelector((state) => state.auth.user);
 
-  const hasLeague = user?.leagueSlugs && !_.isEmpty(user?.leagueSlugs);
+  const hasLeague = user?.leagues && !_.isEmpty(user?.leagues);
 
   const logout = () => {
     dispatch(
@@ -31,7 +31,7 @@ export default function Navbar() {
             <div className="relative flex items-center justify-between h-16">
               {/* Logo section */}
               <Link
-                to={hasLeague ? `/league/${_.first(user?.leagueSlugs)}` : "/"}
+                to={hasLeague ? `/league/${_.first(user?.leagues).slug}` : "/"}
               >
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0">

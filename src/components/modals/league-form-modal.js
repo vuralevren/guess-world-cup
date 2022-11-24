@@ -8,8 +8,9 @@ import Button from "../button";
 import Input from "../inputs/input";
 import InputPhoto from "../inputs/input-photo";
 import CreateLeagueForm from "../forms/create-league-form";
+import JoinLeagueForm from "../forms/join-league-form";
 
-export default function CreateLeagueModal({ open, setOpen }) {
+export default function LeagueFormModal({ open, setOpen }) {
   return (
     <Transition.Root show={open !== false} as={Fragment}>
       <Dialog
@@ -47,7 +48,11 @@ export default function CreateLeagueModal({ open, setOpen }) {
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-              <CreateLeagueForm />
+              {open === "create" ? (
+                <CreateLeagueForm />
+              ) : (
+                open === "join" && <JoinLeagueForm />
+              )}
             </div>
           </Transition.Child>
         </div>

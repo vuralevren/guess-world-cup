@@ -12,18 +12,18 @@ import { toast } from "react-toastify";
 
 export default function CreateLeagueForm() {
   const schema = new yup.ObjectSchema({
-    teamName: yup
-      .string()
-      .required("Team Name is required.")
-      .trim()
-      .min(3, "Team Name must be at least 3 characters.")
-      .max(15, "Team Name must be at most 15 characters."),
     leagueName: yup
       .string()
       .required("League Name is required.")
       .trim()
       .min(3, "League Name must be at least 3 characters.")
       .max(15, "League Name must be at most 15 characters."),
+    teamName: yup
+      .string()
+      .required("Team Name is required.")
+      .trim()
+      .min(3, "Team Name must be at least 3 characters.")
+      .max(15, "Team Name must be at most 15 characters."),
   });
 
   const {
@@ -84,14 +84,6 @@ export default function CreateLeagueForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input
-        label="Team Name"
-        id="teamName"
-        name="teamName"
-        placeholder="Brazil"
-        register={register("teamName")}
-        error={errors.teamName}
-      />
-      <Input
         label="League Name"
         id="leagueName"
         name="leagueName"
@@ -99,6 +91,14 @@ export default function CreateLeagueForm() {
         onBlur={checkLeagueName}
         register={register("leagueName")}
         error={errors.leagueName}
+      />
+      <Input
+        label="Team Name"
+        id="teamName"
+        name="teamName"
+        placeholder="Brazil"
+        register={register("teamName")}
+        error={errors.teamName}
       />
       <Button
         type={formAvailable ? "submit" : "button"}

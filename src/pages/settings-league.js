@@ -124,7 +124,6 @@ export default function SettingsLeague() {
   };
 
   const removeTeam = () => {
-    console.log("hwey");
     dispatch(leagueActions.deleteTeamRequest(deletedTeam));
   };
 

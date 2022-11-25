@@ -1,25 +1,95 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { Link, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import _, { max } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
 import { CheckIcon } from "@heroicons/react/outline";
 import InputWithLeadingIcon from "../inputs/input-with-leading-icon";
 import RadioButtons from "../inputs/radio-buttons";
 import Button from "../button";
+import Input from "../inputs/input";
+import functions from "../../helpers/functions";
+import { matchActions } from "../../redux/match/matchSlice";
+import { toast } from "react-toastify";
 
-export default function GuessScoreModal({
-  open,
-  setOpen,
-  homeTeam,
-  homeLogo,
-  awayTeam,
-  awayLogo,
-}) {
+export default function GuessScoreModal({ prediction, setPrediction }) {
+  const schema = new yup.ObjectSchema({
+    homeScore: yup
+      .number("Score must be number")
+      .transform((cv, ov) => {
+        return ov === "" ? undefined : cv;
+      })
+      .max(15, "Score must be less than or equal to 15.")
+      .min(0, "Score must be greater than or equal to 0.")
+      .required("Score is required."),
+    awayScore: yup
+      .number("Score must be number")
+      .transform((cv, ov) => {
+        return ov === "" ? undefined : cv;
+      })
+      .max(15, "Score must be less than or equal to 15.")
+      .min(0, "Score must be greater than or equal to 0.")
+      .required("Score is required."),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    getFieldState,
+    setError,
+    clearErrors,
+    watch,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      homeScore: prediction?.homeScore || undefined,
+      awayScore: prediction?.awayScore || undefined,
+    },
+  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [firstGoal, setFirstGoal] = useState(prediction?.firstGoal || "home");
+
+  const onSubmit = ({ homeScore, awayScore }) => {
+    setIsLoading(true);
+    dispatch(
+      matchActions.guessScoreRequest({
+        prediction: {
+          ...prediction,
+          isPlayed: true,
+          result: functions.getResult(homeScore, awayScore),
+          firstGoal: homeScore === 0 && awayScore === 0 ? "none" : firstGoal,
+          homeScore,
+          awayScore,
+        },
+        onSuccess: () => {
+          setIsLoading(false);
+          setPrediction(null);
+          toast.success("You guessed successfully.");
+        },
+        onFailure: (errorList) => {
+          toast.error("Something wrong!");
+          setIsLoading(false);
+        },
+      })
+    );
+  };
+
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={!_.isNil(prediction)} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
-        onClose={setOpen}
+        onClose={() => setPrediction(null)}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -50,24 +120,60 @@ export default function GuessScoreModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-              <InputWithLeadingIcon label={homeTeam} imgSrc={homeLogo} />
-              <div className="mt-3">
-                <InputWithLeadingIcon label={awayTeam} imgSrc={awayLogo} />
-              </div>
-              <div className="mt-3">
-                <RadioButtons />
-              </div>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+            >
+              <Input
+                label={prediction?.match.homeName}
+                id="homeScore"
+                type="number"
+                max={15}
+                min={0}
+                name="homeScore"
+                placeholder="Enter your score"
+                register={register("homeScore")}
+                error={errors.homeScore}
+              />
+              <Input
+                label={prediction?.match.awayName}
+                id="awayScore"
+                type="number"
+                max={15}
+                min={0}
+                name="awayScore"
+                placeholder="Enter your score"
+                register={register("awayScore")}
+                error={errors.awayScore}
+              />
+              {!(watch("homeScore") === "0" && watch("awayScore") === "0") && (
+                <div className="mt-3">
+                  <RadioButtons
+                    options={_.map([
+                      {
+                        label: functions.getCutName(prediction?.match.homeName),
+                        value: "home",
+                      },
+                      {
+                        label: functions.getCutName(prediction?.match.awayName),
+                        value: "away",
+                      },
+                    ])}
+                    value={firstGoal}
+                    setValue={setFirstGoal}
+                  />
+                </div>
+              )}
               <div className="mt-5 sm:mt-6">
                 <Button
-                  type="button"
+                  type="submit"
                   className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 sm:text-sm"
-                  onClick={() => setOpen(false)}
+                  loading={isLoading}
                 >
                   Confirm
                 </Button>
               </div>
-            </div>
+            </form>
           </Transition.Child>
         </div>
       </Dialog>

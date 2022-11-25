@@ -11,7 +11,7 @@ export default function LeagueTable() {
   return (
     <Container>
       <h1 className="text-2xl font-semibold text-gray-900">
-        {functions.convertToTitle(league?.name)} Table
+        {functions.convertToTitle(league?.name)}
       </h1>
       <div className="mt-6">
         <table className="min-w-full">

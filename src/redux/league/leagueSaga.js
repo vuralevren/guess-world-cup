@@ -12,6 +12,7 @@ import { leagueActions } from "./leagueSlice";
 import _ from "lodash";
 import { setUserFieldsSaga, setUserLocalSaga } from "../auth/authSaga";
 import { useSelector } from "react-redux";
+import { createPredictionsSaga } from "../match/matchSaga";
 
 function* createSaga({
   payload: { teamName, leagueName, userName, onSuccess, onFailure },
@@ -34,9 +35,14 @@ function* createSaga({
       ...user,
       leagues: user.leagues ? [...user.leagues, userLeague] : [userLeague],
     });
+    const { error } = yield call(createPredictionsSaga, userLeague.team);
+    if (error) {
+      throw error;
+    }
 
-    if (_.isFunction(onSuccess)) onSuccess(league.slug);
     yield put(leagueActions.setLeague(league));
+    yield put(leagueActions.setTeamId(userLeague.team));
+    if (_.isFunction(onSuccess)) onSuccess(league.slug);
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
   }
@@ -87,6 +93,7 @@ function* getLeagueBySlugSaga({
       throw leagueErrors;
     }
 
+    yield put(leagueActions.setTeamId(userTeam._id));
     if (_.isFunction(onSuccess)) onSuccess(_.first(league));
     yield put(
       leagueActions.setLeague({
@@ -140,6 +147,11 @@ function* joinSaga({
       ...user,
       leagues: user.leagues ? [...user.leagues, userLeague] : [userLeague],
     });
+
+    const { error } = yield call(createPredictionsSaga, userLeague.team);
+    if (error) {
+      throw error;
+    }
 
     if (_.isFunction(onSuccess)) onSuccess(userLeague.slug);
   } catch (e) {

@@ -3,6 +3,7 @@ import createSagaMiddleware from "redux-saga";
 import rootSaga from "./rootSaga";
 import { authSlice } from "./auth/authSlice";
 import { leagueSlice } from "./league/leagueSlice";
+import { matchSlice } from "./match/matchSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,6 +12,7 @@ const makeStore = () => {
     reducer: {
       [authSlice.name]: authSlice.reducer,
       [leagueSlice.name]: leagueSlice.reducer,
+      [matchSlice.name]: matchSlice.reducer,
     },
     devTools: true,
     middleware: (getDefaultMiddleware) =>

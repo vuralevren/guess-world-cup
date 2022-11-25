@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // Initial state
 const initialState = {
   league: undefined,
+  teamId: undefined,
 };
 
 export const leagueSlice = createSlice({
@@ -18,6 +19,9 @@ export const leagueSlice = createSlice({
 
     setLeague(state, action) {
       state.league = action.payload;
+    },
+    setTeamId(state, action) {
+      state.teamId = action.payload;
     },
   },
 });

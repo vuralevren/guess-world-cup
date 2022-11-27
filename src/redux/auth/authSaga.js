@@ -1,17 +1,8 @@
-import authService from "./authService";
-import {
-  takeEvery,
-  put,
-  call,
-  all,
-  select,
-  fork,
-  takeLatest,
-} from "redux-saga/effects";
-import { authActions } from "./authSlice";
 import _ from "lodash";
-import fileService from "../file/fileService";
+import { all, call, fork, put, select, takeLatest } from "redux-saga/effects";
 import { deleteFileSaga, uploadFileSaga } from "../file/fileSaga";
+import authService from "./authService";
+import { authActions } from "./authSlice";
 
 function* registerSaga({ payload: { userReq, onSuccess, onFailure } }) {
   try {

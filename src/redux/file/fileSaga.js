@@ -1,12 +1,4 @@
-import {
-  takeEvery,
-  put,
-  call,
-  all,
-  select,
-  fork,
-  takeLatest,
-} from "redux-saga/effects";
+import { call } from "redux-saga/effects";
 import fileService from "./fileService";
 
 export function* uploadFileSaga({ name, file }) {

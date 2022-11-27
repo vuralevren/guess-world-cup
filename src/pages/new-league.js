@@ -1,10 +1,11 @@
+import _ from "lodash";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Button from "../components/button";
-import LeagueFormModal from "../components/modals/league-form-modal";
 import Logo from "../components/logo";
+import LeagueFormModal from "../components/modals/league-form-modal";
 import Navbar from "../components/navbar";
-import { useSelector } from "react-redux";
 
 export default function NewLeague() {
   const [open, setOpen] = useState(false);
@@ -14,139 +15,69 @@ export default function NewLeague() {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-50 h-screen">
-        <div className="relative py-16 h-screen">
-          <div
-            className="hidden absolute top-0 inset-x-0 h-1/2 bg-gray-50 lg:block"
-            aria-hidden="true"
-          />
+      <div className="h-screen">
+        <div className="relative lg:py-8 h-screen">
           <div className="max-w-7xl mx-auto bg-pink-600 lg:bg-transparent lg:px-8">
-            <div className="lg:grid lg:grid-cols-12">
-              <div className="relative z-10 lg:col-start-1 lg:row-start-1 lg:col-span-4 lg:py-16 lg:bg-transparent">
-                <div
-                  className="absolute inset-x-0 h-1/2 bg-gray-50 lg:hidden"
-                  aria-hidden="true"
-                />
-                <div className="max-w-md mx-auto px-4 sm:max-w-3xl sm:px-6 lg:max-w-none lg:p-0">
-                  <div className="aspect-w-10 aspect-h-6 sm:aspect-w-2 sm:aspect-h-1 lg:aspect-w-1">
-                    <Logo />
+            <div className="relative">
+              <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="relative shadow-xl sm:rounded-2xl sm:overflow-hidden">
+                  <div className="absolute inset-0">
+                    <div className="absolute inset-0 bg-pink-900 mix-blend-multiply" />
                   </div>
-                </div>
-              </div>
-
-              <div className="relative bg-pink-600 lg:col-start-3 lg:row-start-1 lg:col-span-10 lg:rounded-3xl lg:grid lg:grid-cols-10 lg:items-center">
-                <div
-                  className="hidden absolute inset-0 overflow-hidden rounded-3xl lg:block"
-                  aria-hidden="true"
-                >
-                  <svg
-                    className="absolute bottom-full left-full transform translate-y-1/3 -translate-x-2/3 xl:bottom-auto xl:top-0 xl:translate-y-0"
-                    width={404}
-                    height={384}
-                    fill="none"
-                    viewBox="0 0 404 384"
-                    aria-hidden="true"
-                  >
-                    <defs>
-                      <pattern
-                        id="64e643ad-2176-4f86-b3d7-f2c5da3b6a6d"
-                        x={0}
-                        y={0}
-                        width={20}
-                        height={20}
-                        patternUnits="userSpaceOnUse"
-                      >
-                        <rect
-                          x={0}
-                          y={0}
-                          width={4}
-                          height={4}
-                          className="text-pink-500"
-                          fill="currentColor"
-                        />
-                      </pattern>
-                    </defs>
-                    <rect
-                      width={404}
-                      height={384}
-                      fill="url(#64e643ad-2176-4f86-b3d7-f2c5da3b6a6d)"
-                    />
-                  </svg>
-                  <svg
-                    className="absolute top-full transform -translate-y-1/3 -translate-x-1/3 xl:-translate-y-1/2"
-                    width={404}
-                    height={384}
-                    fill="none"
-                    viewBox="0 0 404 384"
-                    aria-hidden="true"
-                  >
-                    <defs>
-                      <pattern
-                        id="64e643ad-2176-4f86-b3d7-f2c5da3b6a6d"
-                        x={0}
-                        y={0}
-                        width={20}
-                        height={20}
-                        patternUnits="userSpaceOnUse"
-                      >
-                        <rect
-                          x={0}
-                          y={0}
-                          width={4}
-                          height={4}
-                          className="text-pink-500"
-                          fill="currentColor"
-                        />
-                      </pattern>
-                    </defs>
-                    <rect
-                      width={404}
-                      height={384}
-                      fill="url(#64e643ad-2176-4f86-b3d7-f2c5da3b6a6d)"
-                    />
-                  </svg>
-                </div>
-                <div className="relative max-w-md mx-auto py-12 px-4 space-y-6 sm:max-w-3xl sm:py-16 sm:px-6 lg:max-w-none lg:p-0 lg:col-start-4 lg:col-span-6">
-                  <h2
-                    className="text-3xl font-extrabold text-white"
-                    id="join-heading"
-                  >
-                    Guess World Cup
-                  </h2>
-                  <p className="text-lg text-white">
-                    Create or join league and start enjoying
-                  </p>
-                  {user ? (
-                    <>
-                      <Button
-                        className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto"
-                        onClick={() => setOpen("create")}
-                      >
-                        Create League
-                      </Button>
-                      <Button
-                        className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto ml-3"
-                        onClick={() => setOpen("join")}
-                      >
-                        Join League
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto"
-                        to="/sign-in"
-                      >
-                        Create League
-                      </Link>
-                      <Link
-                        className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto ml-3"
-                        to="/sign-in"
-                      >
-                        Join League
-                      </Link>
-                    </>
-                  )}
+                  <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
+                    <h1 className="flex justify-center items-center flex-col text-4xl text-center font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                      <Logo className="w-[200px]" />
+                      <span className="block text-white">Let's play</span>
+                      <span className="block text-pink-200">
+                        Guess World Cup
+                      </span>
+                    </h1>
+                    <div className="mt-14 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
+                      <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
+                        {user ? (
+                          <>
+                            <Button
+                              className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-pink-700 bg-white hover:bg-pink-50 sm:px-8"
+                              onClick={() => setOpen("create")}
+                            >
+                              Create League
+                            </Button>
+                            <Button
+                              className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-pink-500 bg-opacity-60 hover:bg-opacity-70 sm:px-8"
+                              onClick={() => setOpen("join")}
+                            >
+                              Join League
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Link
+                              className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto"
+                              to="/sign-in"
+                            >
+                              Create League
+                            </Link>
+                            <Link
+                              className="block w-full py-3 px-5 text-center bg-white border border-transparent rounded-md shadow-md text-base font-medium text-pink-700 hover:bg-gray-50 sm:inline-block sm:w-auto ml-3"
+                              to="/sign-in"
+                            >
+                              Join League
+                            </Link>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    {user?.leagues && !_.isEmpty(user?.leagues) && (
+                      <p className="text-center mt-8 text-sm text-white">
+                        <Link
+                          to={`/league/${_.first(user?.leagues).slug}`}
+                          className="font-medium text-white tracking-sm hover:text-pink-500"
+                        >
+                          Go to dashboard
+                        </Link>
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

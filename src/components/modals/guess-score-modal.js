@@ -1,20 +1,17 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
+import _ from "lodash";
+import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import * as yup from "yup";
-import _, { max } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
-import { CheckIcon } from "@heroicons/react/outline";
-import InputWithLeadingIcon from "../inputs/input-with-leading-icon";
-import RadioButtons from "../inputs/radio-buttons";
-import Button from "../button";
-import Input from "../inputs/input";
 import functions from "../../helpers/functions";
 import { matchActions } from "../../redux/match/matchSlice";
-import { toast } from "react-toastify";
+import Button from "../button";
+import Input from "../inputs/input";
+import RadioButtons from "../inputs/radio-buttons";
 
 export default function GuessScoreModal({ prediction, setPrediction }) {
   const schema = new yup.ObjectSchema({
@@ -40,9 +37,6 @@ export default function GuessScoreModal({ prediction, setPrediction }) {
     handleSubmit,
     register,
     formState: { errors },
-    getFieldState,
-    setError,
-    clearErrors,
     watch,
   } = useForm({
     resolver: yupResolver(schema),
@@ -53,8 +47,6 @@ export default function GuessScoreModal({ prediction, setPrediction }) {
   });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
 
   const [isLoading, setIsLoading] = useState(false);
   const [firstGoal, setFirstGoal] = useState(prediction?.firstGoal || "home");
@@ -103,8 +95,6 @@ export default function GuessScoreModal({ prediction, setPrediction }) {
           >
             <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
-
-          {/* This element is to trick the browser into centering the modal contents. */}
           <span
             className="hidden sm:inline-block sm:align-middle sm:h-screen"
             aria-hidden="true"

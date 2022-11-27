@@ -1,4 +1,4 @@
-import { auth, db, endpoint } from "../../configs/altogic";
+import { db, endpoint } from "../../configs/altogic";
 
 const matchService = {
   getPredictions(teamId, week) {

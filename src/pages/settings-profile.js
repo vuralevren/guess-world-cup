@@ -1,9 +1,7 @@
-import Input from "../components/inputs/input";
-import SettingsProfileForm from "../components/settings/settings-profile-form";
-import SettingsPhotoForm from "../components/settings/settings-photo-form";
-import { authActions } from "../redux/auth/authSlice";
 import SettingsEmailForm from "../components/settings/settings-email-form";
 import SettingsPasswordForm from "../components/settings/settings-password-form";
+import SettingsPhotoForm from "../components/settings/settings-photo-form";
+import SettingsProfileForm from "../components/settings/settings-profile-form";
 
 export default function SettingsProfile() {
   return (

@@ -80,7 +80,7 @@ export default function SignIn() {
         <div className="flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-lg lg:w-[360px]">
             <div className="flex flex-col items-center">
-              <Logo />
+              <Logo primary />
               <h2 className="text-4xl font-bold text-slate-800">
                 Welcome Back!
               </h2>

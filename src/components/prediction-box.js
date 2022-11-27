@@ -1,8 +1,8 @@
-import { ArrowRightIcon, ChevronRightIcon } from "@heroicons/react/outline";
+import { ChevronRightIcon } from "@heroicons/react/outline";
 import cs from "classnames";
-import { MatchStatus, FirstGoalStatus } from "../helpers/utils";
-import Button from "./button";
 import _ from "lodash";
+import { FirstGoalStatus, MatchStatus } from "../helpers/utils";
+import Button from "./button";
 
 function getButtonLabel(status, isPlayed) {
   switch (status) {

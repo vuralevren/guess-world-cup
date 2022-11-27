@@ -1,13 +1,13 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import _ from "lodash";
 import classNames from "classnames";
-import Logo from "../components/logo";
+import _ from "lodash";
 import { Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "../components/logo";
+import { authActions } from "../redux/auth/authSlice";
 import Avatar from "./avatar";
 import Button from "./button";
-import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../redux/auth/authSlice";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -29,7 +29,6 @@ export default function Navbar() {
         <>
           <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
             <div className="relative flex items-center justify-between h-16">
-              {/* Logo section */}
               <Link
                 to={hasLeague ? `/league/${_.first(user?.leagues).slug}` : "/"}
               >
@@ -41,10 +40,8 @@ export default function Navbar() {
               </Link>
 
               <div className="flex lg:hidden"></div>
-              {/* Links section */}
               <div className="hidden lg:block lg:w-80">
                 <div className="flex items-center justify-end">
-                  {/* Profile dropdown */}
                   {user ? (
                     <Menu as="div" className="ml-4 relative flex-shrink-0">
                       <Menu.Button className="bg-pink-700 flex text-sm rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-pink-700 focus:ring-white">

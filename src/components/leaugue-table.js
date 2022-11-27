@@ -1,16 +1,14 @@
+import cs from "classnames";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import Container from "./container";
-import Avatar from "./avatar";
 import functions from "../helpers/functions";
-import { matchActions } from "../redux/match/matchSlice";
-import cs from "classnames";
 import { leagueActions } from "../redux/league/leagueSlice";
+import Avatar from "./avatar";
+import Container from "./container";
 
 export default function LeagueTable() {
   const dispatch = useDispatch();
   const selectedTeamId = useSelector((state) => state.league.teamId);
-  console.log({ selectedTeamId });
   const league = useSelector((state) => state.league.league);
   const teams = _.orderBy(league?.teams, ["point"], ["desc"]);
 
@@ -51,7 +49,6 @@ export default function LeagueTable() {
                     <Avatar anotherUser={team.user} size={10} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    {/* Extend touch target to entire panel */}
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">
                       {team.name}

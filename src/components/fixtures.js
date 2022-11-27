@@ -1,13 +1,12 @@
 import _ from "lodash";
 import React from "react";
 import { useSelector } from "react-redux";
-import Button from "./button";
-import Container from "./container";
-import PredictionBox from "./prediction-box";
-import GuessScoreModal from "./modals/guess-score-modal";
 import { useParams } from "react-router-dom";
+import Container from "./container";
+import GuessScoreModal from "./modals/guess-score-modal";
+import PredictionBox from "./prediction-box";
 
-export default function Fixtures(params) {
+export default function Fixtures() {
   const { leagueSlug } = useParams();
 
   const user = useSelector((state) => state.auth.user);

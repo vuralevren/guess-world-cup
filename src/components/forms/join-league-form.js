@@ -1,14 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import _ from "lodash";
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as yup from "yup";
+import { leagueActions } from "../../redux/league/leagueSlice";
 import Button from "../button";
 import Input from "../inputs/input";
-import { leagueActions } from "../../redux/league/leagueSlice";
-import { toast } from "react-toastify";
 
 export default function JoinLeagueForm() {
   const schema = new yup.ObjectSchema({
@@ -37,7 +37,6 @@ export default function JoinLeagueForm() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
 
   const [codeAvailable, setCodeAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

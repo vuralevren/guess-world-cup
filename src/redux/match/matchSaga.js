@@ -5,7 +5,19 @@ import { matchActions } from "./matchSlice";
 
 function* getPredictionsSaga({ payload: { teamId, onSuccess, onFailure } }) {
   try {
-    const { data, errors } = yield call(matchService.getPredictions, teamId);
+    const {
+      data: { week },
+      errors: weekError,
+    } = yield call(matchService.getCurrentWeek);
+    if (weekError) {
+      throw weekError;
+    }
+
+    const { data, errors } = yield call(
+      matchService.getPredictions,
+      teamId,
+      week
+    );
     if (errors) {
       throw errors;
     }
@@ -38,7 +50,7 @@ function* guessScoreSaga({ payload: { prediction, onSuccess, onFailure } }) {
   }
 }
 
-export function* createPredictionsSaga(userTeamId) {
+export function* createPredictionsSaga(userTeamId, leagueId) {
   try {
     const {
       data: { week },
@@ -59,6 +71,8 @@ export function* createPredictionsSaga(userTeamId) {
     const predictions = _.map(matches, (match) => ({
       match: match._id,
       userTeam: userTeamId,
+      week,
+      league: leagueId,
     }));
     const { errors: predError } = yield call(
       matchService.createPredictions,

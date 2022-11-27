@@ -1,4 +1,4 @@
-function DeleteModal({ setDeleteModal, clickDelete }) {
+function DeleteModal({ title, description, setDeleteModal, clickDelete }) {
   return (
     <div className="relative z-20">
       <div className="fixed inset-0 bg-black bg-opacity-50" />
@@ -43,10 +43,10 @@ function DeleteModal({ setDeleteModal, clickDelete }) {
             <div className="text-left mb-8">
               <div className="mb-5">
                 <h3 className="text-slate-800 mb-2 text-lg font-medium tracking-sm">
-                  Remove Team
+                  {title}
                 </h3>
                 <span className="text-slate-500 text-sm tracking-sm">
-                  Are you sure you would like to remove this team?
+                  {description}
                 </span>
               </div>
             </div>

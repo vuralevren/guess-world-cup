@@ -77,7 +77,7 @@ export default function GuessScoreModal({ prediction, setPrediction }) {
           toast.success("You guessed successfully.");
         },
         onFailure: (errorList) => {
-          toast.error("Something wrong!");
+          toast.error(_.get(errorList, "items[0].message"));
           setIsLoading(false);
         },
       })

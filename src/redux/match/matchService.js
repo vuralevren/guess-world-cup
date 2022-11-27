@@ -6,6 +6,7 @@ const matchService = {
       .model("predictions")
       .filter(`userTeam == '${teamId}' && week == ${week}`)
       .lookup({ field: "match" })
+      .sort("match.date", "asc")
       .get();
   },
   guessScore(prediction) {

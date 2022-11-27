@@ -1,12 +1,22 @@
 import _ from "lodash";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Container from "./container";
 import Avatar from "./avatar";
 import functions from "../helpers/functions";
+import { matchActions } from "../redux/match/matchSlice";
+import cs from "classnames";
+import { leagueActions } from "../redux/league/leagueSlice";
 
 export default function LeagueTable() {
+  const dispatch = useDispatch();
+  const selectedTeamId = useSelector((state) => state.league.teamId);
+  console.log({ selectedTeamId });
   const league = useSelector((state) => state.league.league);
   const teams = _.orderBy(league?.teams, ["point"], ["desc"]);
+
+  const selectPredictions = (teamId) => {
+    dispatch(leagueActions.setTeamId(teamId));
+  };
 
   return (
     <Container>
@@ -27,7 +37,14 @@ export default function LeagueTable() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
             {_.map(teams, (team, index) => (
-              <tr className="group group-hover:bg-gray-50" key={team.user._id}>
+              <tr
+                className={cs([
+                  "group hover:bg-gray-100 cursor-pointer bg-white",
+                  selectedTeamId === team._id && "bg-gray-100",
+                ])}
+                key={team.user._id}
+                onClick={() => selectPredictions(team._id)}
+              >
                 <td className="relative px-6 py-5 flex items-center space-x-3 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
                   <div className="flex items-center space-x-2">{index + 1}</div>
                   <div className="flex-shrink-0">

@@ -1,9 +1,9 @@
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-white.webp";
 
-export default function Logo({ className }) {
+export default function Logo({ className, w }) {
   return (
     <img
-      className={className || "w-[192px] h-[120px] mb-6"}
+      className={className || `w-[${w || "192px"} ] h-[120px] mb-6`}
       src={logo}
       alt="Guess World Cup"
     />

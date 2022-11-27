@@ -40,9 +40,9 @@ export default function SettingsLeague() {
   const leagueSlug = useQuery("tab");
 
   const [formAvailable, setFormAvailable] = useState(true);
-  const [deleteModal, setDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [deletedTeam, setDeletedTeam] = useState(null);
+  const [deleteLeague, setDeleteLeague] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const league = useSelector((state) => state.league.league);
 
@@ -125,6 +125,20 @@ export default function SettingsLeague() {
 
   const removeTeam = () => {
     dispatch(leagueActions.deleteTeamRequest(deletedTeam));
+  };
+
+  const removeLeague = () => {
+    dispatch(
+      leagueActions.removeLeagueRequest({
+        leagueId: league?._id,
+        onSuccess: () => {
+          navigate("/");
+        },
+        onFailure: (errorList) => {
+          toast.error(_.get(errorList, "items[0].message"));
+        },
+      })
+    );
   };
 
   return (
@@ -223,8 +237,38 @@ export default function SettingsLeague() {
           </tbody>
         </table>
       )}
+
+      <div className="shadow sm:rounded-md sm:overflow-hidden">
+        <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
+          <div>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              Delete League
+            </h3>
+          </div>
+
+          <div className="flex justify-center">
+            <Button
+              className="bg-pink-600 border w-4/12 border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-md font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+              onClick={() => setDeleteLeague(true)}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {deleteLeague && (
+        <DeleteModal
+          title="Delete League"
+          description="Are you sure you would like to delete the league?"
+          setDeleteModal={() => setDeleteLeague(false)}
+          clickDelete={removeLeague}
+        />
+      )}
       {deletedTeam && (
         <DeleteModal
+          title="Remove Team"
+          description="Are you sure you would like to remove this team?"
           setDeleteModal={() => setDeletedTeam(null)}
           clickDelete={removeTeam}
         />

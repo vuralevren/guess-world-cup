@@ -18,10 +18,7 @@ function* createSaga({
   payload: { teamName, leagueName, userName, onSuccess, onFailure },
 }) {
   try {
-    const {
-      data: { league, userLeague },
-      errors,
-    } = yield call(leagueService.create, {
+    const { data, errors } = yield call(leagueService.create, {
       teamName,
       leagueName,
       userName,
@@ -33,16 +30,22 @@ function* createSaga({
     const user = yield select((state) => state.auth.user);
     yield fork(setUserLocalSaga, {
       ...user,
-      leagues: user.leagues ? [...user.leagues, userLeague] : [userLeague],
+      leagues: user.leagues
+        ? [...user.leagues, data?.userLeague]
+        : [data?.userLeague],
     });
-    const { error } = yield call(createPredictionsSaga, userLeague.team);
+    const { error } = yield call(
+      createPredictionsSaga,
+      data?.userLeague.team,
+      data?.league._id
+    );
     if (error) {
       throw error;
     }
 
-    yield put(leagueActions.setLeague(league));
-    yield put(leagueActions.setTeamId(userLeague.team));
-    if (_.isFunction(onSuccess)) onSuccess(league.slug);
+    yield put(leagueActions.setLeague(data?.league));
+    yield put(leagueActions.setTeamId(data?.userLeague.team));
+    if (_.isFunction(onSuccess)) onSuccess(data?.league.slug);
   } catch (e) {
     if (_.isFunction(onFailure)) onFailure(e);
   }
@@ -148,7 +151,11 @@ function* joinSaga({
       leagues: user.leagues ? [...user.leagues, userLeague] : [userLeague],
     });
 
-    const { error } = yield call(createPredictionsSaga, userLeague.team);
+    const { error } = yield call(
+      createPredictionsSaga,
+      userLeague.team,
+      leagueId
+    );
     if (error) {
       throw error;
     }
@@ -230,6 +237,26 @@ function* deleteTeamSaga({
   }
 }
 
+function* removeLeagueSaga({ payload: { leagueId, onSuccess, onFailure } }) {
+  try {
+    const { errors } = yield call(leagueService.deleteLeague, leagueId);
+    if (errors) {
+      throw errors;
+    }
+
+    const user = yield select((state) => state.auth.user);
+    yield fork(setUserLocalSaga, {
+      ...user,
+      leagues: _.reject(user?.leagues, (league) => league.league === leagueId),
+    });
+    yield put(leagueActions.setLeague(null));
+    if (_.isFunction(onSuccess)) onSuccess();
+  } catch (e) {
+    console.log(e);
+    if (_.isFunction(onFailure)) onFailure(e);
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeLatest(leagueActions.createRequest.type, createSaga),
@@ -242,5 +269,6 @@ export default function* rootSaga() {
       changeLeagueNameSaga
     ),
     takeLatest(leagueActions.deleteTeamRequest.type, deleteTeamSaga),
+    takeLatest(leagueActions.removeLeagueRequest.type, removeLeagueSaga),
   ]);
 }

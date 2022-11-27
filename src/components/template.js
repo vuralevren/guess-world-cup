@@ -42,7 +42,6 @@ export default function Sidebar({ children }) {
             key={slug}
             to={`/league/${slug}`}
             className={cs(
-              //item.current
               leagueSlug === slug
                 ? "bg-pink-800 text-white"
                 : "text-pink-100 hover:bg-pink-600",

@@ -74,7 +74,7 @@ export default function CreateLeagueForm() {
           setIsLoading(false);
         },
         onFailure: (errorList) => {
-          toast.error("Something wrong!");
+          toast.error(_.get(errorList, "items[0].message"));
           setIsLoading(false);
         },
       })

@@ -45,6 +45,11 @@ const leagueService = {
       userId,
     });
   },
+  deleteLeague(leagueId) {
+    return endpoint.delete("/league", {
+      leagueId,
+    });
+  },
 };
 
 export default leagueService;

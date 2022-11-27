@@ -61,9 +61,9 @@ export default function Fixtures(params) {
                 <Button
                   className="w-full bg-pink-600 border border-transparent py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-pink-700"
                   onClick={() => setSelectedPrediction(prediction)}
-                  disabled={prediction?.match.result !== "notStart"}
+                  disabled={prediction?.match.status !== "notStarted"}
                 >
-                  {prediction?.match.result === "notStart"
+                  {prediction?.match.status === "notStarted"
                     ? "Guess Score"
                     : prediction?.match.result === "started"
                     ? "Match Started"

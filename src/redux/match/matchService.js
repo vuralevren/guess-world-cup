@@ -1,15 +1,15 @@
 import { auth, db, endpoint } from "../../configs/altogic";
 
 const matchService = {
-  getPredictions(teamId) {
+  getPredictions(teamId, week) {
     return db
       .model("predictions")
-      .filter(`userTeam == '${teamId}'`)
+      .filter(`userTeam == '${teamId}' && week == ${week}`)
       .lookup({ field: "match" })
       .get();
   },
   guessScore(prediction) {
-    return db.model("predictions").object(prediction._id).update(prediction);
+    return endpoint.post("/prediction/guessScore", prediction);
   },
   getCurrentWeek() {
     return db.model("game_settings").filter("isCurrent").getSingle();

@@ -1,4 +1,4 @@
-import { auth, db, storage } from "../../configs/altogic";
+import { storage } from "../../configs/altogic";
 
 const fileService = {
   upload(name, file) {

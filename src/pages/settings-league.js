@@ -1,18 +1,18 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import _ from "lodash";
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as yup from "yup";
 import Avatar from "../components/avatar";
 import Button from "../components/button";
 import Input from "../components/inputs/input";
-import { leagueActions } from "../redux/league/leagueSlice";
-import useQuery from "../helpers/useQuery";
-import { toast } from "react-toastify";
-import functions from "../helpers/functions";
 import DeleteModal from "../components/modals/delete-modal";
+import functions from "../helpers/functions";
+import useQuery from "../helpers/useQuery";
+import { leagueActions } from "../redux/league/leagueSlice";
 
 export default function SettingsLeague() {
   const schema = new yup.ObjectSchema({
@@ -208,7 +208,6 @@ export default function SettingsLeague() {
                     <Avatar anotherUser={team.user} size={10} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    {/* Extend touch target to entire panel */}
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">
                       {team.name}

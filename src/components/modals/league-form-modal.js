@@ -1,12 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/outline";
-import InputWithLeadingIcon from "../inputs/input-with-leading-icon";
-import RadioButtons from "../inputs/radio-buttons";
-import Button from "../button";
-import Input from "../inputs/input";
-import InputPhoto from "../inputs/input-photo";
+import { Fragment } from "react";
 import CreateLeagueForm from "../forms/create-league-form";
 import JoinLeagueForm from "../forms/join-league-form";
 
@@ -30,8 +24,6 @@ export default function LeagueFormModal({ open, setOpen }) {
           >
             <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
-
-          {/* This element is to trick the browser into centering the modal contents. */}
           <span
             className="hidden sm:inline-block sm:align-middle sm:h-screen"
             aria-hidden="true"

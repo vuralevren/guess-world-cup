@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import _ from "lodash";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export function Private({ children, mustHasLeague }) {
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ export function Public({ children }) {
   const hasLeague = user?.leagues && !_.isEmpty(user?.leagues);
 
   useEffect(() => {
-    console.log(user);
     if (user) {
       navigate(hasLeague ? `/league/${_.first(user?.leagues).slug}` : "/");
     }

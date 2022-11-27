@@ -1,4 +1,4 @@
-import { auth, db, endpoint } from "../../configs/altogic";
+import { db, endpoint } from "../../configs/altogic";
 
 const matchService = {
   getPredictions(teamId, week) {
@@ -6,6 +6,7 @@ const matchService = {
       .model("predictions")
       .filter(`userTeam == '${teamId}' && week == ${week}`)
       .lookup({ field: "match" })
+      .sort("match.date", "asc")
       .get();
   },
   guessScore(prediction) {

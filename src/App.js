@@ -1,22 +1,21 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import makeStore from "./redux/store";
+import AuthRedirect from "./pages/auth-redirect";
+import CreateAnAccount from "./pages/create-an-account";
+import ForgotPassword from "./pages/forgot-password";
+import ForgotPasswordEmail from "./pages/forgot-password-email";
 import Home from "./pages/home";
 import NewLeague from "./pages/new-league";
 import Settings from "./pages/settings";
 import SignIn from "./pages/sign-in";
-import CreateAnAccount from "./pages/create-an-account";
-import ForgotPassword from "./pages/forgot-password";
-import ForgotPasswordEmail from "./pages/forgot-password-email";
-import AuthRedirect from "./pages/auth-redirect";
+import makeStore from "./redux/store";
 
-import * as ProtectedRoute from "./components/core/protected-route";
-import Navbar from "./components/navbar";
-import NotFound from "./pages/not-found";
-import { ToastContainer, toast, cssTransition } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as ProtectedRoute from "./components/core/protected-route";
 import EmailVerification from "./pages/email-verification";
+import NotFound from "./pages/not-found";
 
 const store = makeStore();
 

@@ -1,13 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import _ from "lodash";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import Input from "../inputs/input";
-import Button from "../button";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import { authActions } from "../../redux/auth/authSlice";
+import Button from "../button";
+import Input from "../inputs/input";
 
 export default function SettingsEmailForm() {
   const schema = new yup.ObjectSchema({

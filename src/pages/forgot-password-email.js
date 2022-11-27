@@ -2,7 +2,6 @@ import { ArrowLeftIcon } from "@heroicons/react/outline";
 import { KeyIcon } from "@heroicons/react/solid";
 import { Link } from "react-router-dom";
 import AuthSidebar from "../components/auth-sidebar";
-import Button from "../components/button";
 import useQuery from "../helpers/useQuery";
 
 export default function ForgotPasswordEmail() {
@@ -23,15 +22,6 @@ export default function ForgotPasswordEmail() {
               <p className="mb-6 text-base tracking-sm text-slate-500">
                 We sent a password reset link to <br />{" "}
                 <span className="text-slate-700 font-semibold">{email}</span>
-              </p>
-              <p className="mb-8 text-center text-sm text-slate-500 tracking-sm">
-                Didn’t receive the email?{" "}
-                <Button
-                  className="border-0 font-medium text-pink-700 tracking-sm hover:text-pink-500"
-                  // </p>onClick={resendEmail}
-                >
-                  Click to resend
-                </Button>
               </p>
               <div className="text-center mt-8">
                 <Link

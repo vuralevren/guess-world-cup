@@ -1,23 +1,15 @@
-import {
-  CreditCardIcon,
-  GlobeAltIcon,
-  KeyIcon,
-  UserCircleIcon,
-  UserGroupIcon,
-  ViewGridAddIcon,
-} from "@heroicons/react/outline";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { useEffect, useState, Fragment } from "react";
-import Container from "../components/container";
-import SettingsProfile from "./settings-profile";
-import useQuery from "../helpers/useQuery";
-import SettingsLeague from "./settings-league";
-import Navbar from "../components/navbar";
+import { GlobeAltIcon, UserCircleIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
 import _ from "lodash";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Container from "../components/container";
+import Navbar from "../components/navbar";
 import functions from "../helpers/functions";
+import useQuery from "../helpers/useQuery";
+import SettingsLeague from "./settings-league";
+import SettingsProfile from "./settings-profile";
 
 export default function Settings(props) {
   const tab = useQuery("tab");

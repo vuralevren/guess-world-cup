@@ -1,18 +1,9 @@
-import leagueService from "./leagueService";
-import {
-  takeEvery,
-  put,
-  call,
-  all,
-  select,
-  fork,
-  takeLatest,
-} from "redux-saga/effects";
-import { leagueActions } from "./leagueSlice";
 import _ from "lodash";
-import { setUserFieldsSaga, setUserLocalSaga } from "../auth/authSaga";
-import { useSelector } from "react-redux";
+import { all, call, fork, put, select, takeLatest } from "redux-saga/effects";
+import { setUserLocalSaga } from "../auth/authSaga";
 import { createPredictionsSaga } from "../match/matchSaga";
+import leagueService from "./leagueService";
+import { leagueActions } from "./leagueSlice";
 
 function* createSaga({
   payload: { teamName, leagueName, userName, onSuccess, onFailure },
@@ -105,7 +96,6 @@ function* getLeagueBySlugSaga({
       })
     );
   } catch (e) {
-    console.log(e);
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -127,7 +117,6 @@ function* checkleagueCodeSaga({
         league: data?.league,
       });
   } catch (e) {
-    console.log(e);
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -162,7 +151,6 @@ function* joinSaga({
 
     if (_.isFunction(onSuccess)) onSuccess(userLeague.slug);
   } catch (e) {
-    console.log(e);
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -232,7 +220,6 @@ function* deleteTeamSaga({
     );
     if (_.isFunction(onSuccess)) onSuccess();
   } catch (e) {
-    console.log(e);
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }
@@ -252,7 +239,6 @@ function* removeLeagueSaga({ payload: { leagueId, onSuccess, onFailure } }) {
     yield put(leagueActions.setLeague(null));
     if (_.isFunction(onSuccess)) onSuccess();
   } catch (e) {
-    console.log(e);
     if (_.isFunction(onFailure)) onFailure(e);
   }
 }

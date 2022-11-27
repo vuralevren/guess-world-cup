@@ -2,32 +2,34 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   CogIcon,
   GlobeAltIcon,
+  InformationCircleIcon,
   LinkIcon,
   MenuAlt2Icon,
-  PlusCircleIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import { MailIcon, PlusIcon, PlusSmIcon } from "@heroicons/react/solid";
-import { Fragment, useState } from "react";
-import Logo from "../components/logo";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Button from "../components/button";
-import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../redux/auth/authSlice";
-import _ from "lodash";
 import cs from "classnames";
-import functions from "../helpers/functions";
-import Avatar from "./avatar";
+import _ from "lodash";
+import { Fragment, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Button from "../components/button";
+import Logo from "../components/logo";
+import functions from "../helpers/functions";
+import { authActions } from "../redux/auth/authSlice";
+import Avatar from "./avatar";
+import InfoModal from "./modals/info-modal";
 
 export default function Sidebar({ children }) {
   const { leagueSlug } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const user = useSelector((state) => state.auth.user);
   const league = useSelector((state) => state.league.league);
+
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const copyCode = () => {
     toast.success("Invation code copied to clipboard");
@@ -41,6 +43,7 @@ export default function Sidebar({ children }) {
           <Link
             key={slug}
             to={`/league/${slug}`}
+            onClick={() => sidebarOpen(false)}
             className={cs(
               leagueSlug === slug
                 ? "bg-pink-800 text-white"
@@ -113,7 +116,7 @@ export default function Sidebar({ children }) {
                   </div>
                 </Transition.Child>
                 <div className="flex-shrink-0 flex items-center px-4">
-                  <Logo />
+                  <Logo w="250px" />
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">{getNavigations()}</nav>
@@ -127,15 +130,11 @@ export default function Sidebar({ children }) {
                 </div>
               </div>
             </Transition.Child>
-            <div className="flex-shrink-0 w-14" aria-hidden="true">
-              {/* Dummy element to force sidebar to shrink to fit close icon */}
-            </div>
+            <div className="flex-shrink-0 w-14" aria-hidden="true"></div>
           </Dialog>
         </Transition.Root>
 
-        {/* Static sidebar for desktop */}
         <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex flex-col flex-grow pt-5 bg-pink-700 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
               <Logo />
@@ -168,6 +167,17 @@ export default function Sidebar({ children }) {
               <div className="ml-4 flex items-center md:ml-6">
                 <button
                   type="button"
+                  className="-m-2.5 w-10 h-10 rounded-full inline-flex items-center justify-center text-gray-400 hover:text-gray-500"
+                  onClick={() => setOpenInfoModal(true)}
+                >
+                  <span className="sr-only">Info</span>
+                  <InformationCircleIcon
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  />
+                </button>
+                <button
+                  type="button"
                   className="w-10 h-10 rounded-full inline-flex items-center justify-center text-gray-400 hover:text-gray-500"
                   onClick={copyCode}
                 >
@@ -189,11 +199,6 @@ export default function Sidebar({ children }) {
                     <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                       <span className="sr-only">Open user menu</span>
                       <Avatar size={10} />
-                      {/* <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      /> */}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -244,11 +249,11 @@ export default function Sidebar({ children }) {
               </div>
             </div>
           </div>
-          {/* Content */}
           <main>
             <div className="py-6">{children}</div>
           </main>
         </div>
+        <InfoModal open={openInfoModal} setOpen={setOpenInfoModal} />
       </div>
     </>
   );

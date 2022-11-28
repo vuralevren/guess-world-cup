@@ -64,7 +64,11 @@ export default function InfoModal({ open, setOpen }) {
                           If the user knows the exact score, earns 5 points
                         </li>
                         <li>
-                          If the user knows the exact team's score, earns 2
+                          If the user knows the exact home team's score, earns 2
+                          points
+                        </li>
+                        <li>
+                          If the user knows the exact away team's score, earns 2
                           points
                         </li>
                         <li>

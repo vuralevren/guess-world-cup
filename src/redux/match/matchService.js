@@ -16,7 +16,7 @@ const matchService = {
     return db.model("game_settings").filter("isCurrent").getSingle();
   },
   getWeekMatches(week) {
-    return db.model("matches").filter(`week == ${week}`).get();
+    return db.model("matches").filter(`week == ${week}`).limit(50).get();
   },
   createPredictions(predictions) {
     return db.model("predictions").create(predictions);
